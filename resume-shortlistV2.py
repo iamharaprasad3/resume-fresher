@@ -7,8 +7,6 @@ from dateutil import relativedelta
 import pandas as pd
 import re
 from tempfile import NamedTemporaryFile
-import os
-import json
 import requests
 from io import BytesIO
 from spire.doc import *
@@ -292,6 +290,7 @@ def runningmain(text_content, file_name):
     # keywords
     total_words = 0
     words_in_pdf = 0
+    keywords = [s.strip() for s in keywords_para.split(',')]
     try:
         word_count_in_pdf = check_words_in_pdf(text_content, keywords)
         print("Word Count in PDF:")
@@ -307,7 +306,7 @@ def runningmain(text_content, file_name):
     if(total_words > 0):
         print(words_in_pdf/total_words)
         st.write(f"Percentage of Keywords found in the resume: + {(words_in_pdf/total_words)*100}") 
-        if(words_in_pdf/total_words >= 0.5):
+        if(words_in_pdf/total_words >= 0.4):
             total_score = total_score + 10
     else:
         total_score = total_score + 3
