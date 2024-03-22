@@ -325,7 +325,7 @@ def runningmain(text_content, file_name):
     st.write(f"**:red[Total Score of the Candidate]** - **({str(total_score)}/50)**")
     dicc.update({"Similarity Score":f"{str(similarity_score)}"})
 
-    if(total_score > 30):
+    if(total_score > 20):
         st.write(f"***:red[SHORTLISTED]***")
         dicc.update({"RESULT":"SHORTLISTED"})
         # os.replace(file_path, folder_path + "/shortlisted/" + file_name)
