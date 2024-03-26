@@ -229,12 +229,16 @@ def extract_scores(text_content):
     st.write("Scores Found - ", numbers)
     number_flag = True
     for number in numbers:
-        if(number <= 10):
-            if(number < 6):
+        if(number == 4.33):
+            continue
+        elif(number <= 10):
+            if(number < 6 and number > 4.33):
+                number_flag = False
+            elif(number < 2.6):
                 number_flag = False
         elif(number<100 and number<60):
             number_flag = False
-
+                
     if(number_flag):
         return 1
     else:
