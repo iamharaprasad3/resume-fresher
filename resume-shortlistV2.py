@@ -33,6 +33,7 @@ degrees = [btech, mba, diploma]
 check_degrees = []
 min_qual = []
 
+    
 genai.configure(api_key="AIzaSyBrRVRj1I1lDwCRcMz9svDqAqa9TMo9Aw0")
 
 generation_config = {
@@ -416,14 +417,14 @@ def runningmain(text_content, file_name):
         st.write(f"Candidate has below par scores or no score found")
     
     st.write(f":red[Score after results extraction] - **({str(total_score)}/50)**")
+    if(min_quali != ""):
+        for degree in check_degrees:
+            for word in degree:
+                if word in text_content:
+                    total_score += 5
+                    break
 
-    for degree in check_degrees:
-        for word in degree:
-            if word in text_content:
-                total_score += 5
-                break
-
-    st.write(f":red[Score after min. qualification check] - **({str(total_score)}/50)**")
+        st.write(f":red[Score after min. qualification check] - **({str(total_score)}/50)**")
 
     # keywords
     total_words = 0
