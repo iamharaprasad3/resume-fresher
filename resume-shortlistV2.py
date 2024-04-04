@@ -413,8 +413,11 @@ def runningmain(text_content, file_name):
     if(score == 1):
         total_score = total_score+5
         st.write(f"Candidate has academic scores in the acceptable range")
+        dicc.update({"Minimum Score Pass":"PASS"})
     else:
         st.write(f"Candidate has below par scores or no score found")
+        dicc.update({"Minimum Score Pass":"FAIl"})
+
     
     st.write(f":red[Score after results extraction] - **({str(total_score)}/50)**")
     if(min_quali != ""):
@@ -539,7 +542,10 @@ for file_name, attributes in sorted_scores:
     row.extend(attributes.values())
     data.append(row)
 
-df = pd.DataFrame(data, columns=["File Name", "Job Switch", "Experience", "Career Breaks", "Keyword Matching Percentage", "Similarity Score", "Result", "Total Score"])
+if(min_quali != "" and minimum_exp != ""):
+    df = pd.DataFrame(data, columns=["File Name", "Job Switch", "Experience", "Career Breaks", "Minimum Score Pass", "Keyword Matching Percentage", "Similarity Score", "Result", "Total Score"])
+else:
+    df = pd.DataFrame(data, columns=["File Name", "Minimum Score Pass", "Keyword Matching Percentage", "Similarity Score", "Result", "Total Score"])
 
 csv = df.to_csv().encode('utf-8')
 
