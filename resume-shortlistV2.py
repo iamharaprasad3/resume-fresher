@@ -386,7 +386,7 @@ def runningmain(text_content, file_name):
                 st.write("**Candidate has switched jobs before completing 12 months of tenure**")
                 dicc.update({"Job Switches":"FAIL"})
 
-            if(total_experience/12 < minimum_exp):
+            if(total_experience/12 < int(minimum_exp)):
                 print("Minimum Experience Criteria Doesn't match")
                 st.write("***:red[MINIMUM EXPERIENCE CRITERIA DOESN'T MATCH]***")
                 # total_score = -100
