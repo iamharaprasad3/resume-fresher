@@ -33,9 +33,6 @@ degrees = [btech, mba, diploma]
 check_degrees = []
 min_qual = []
 
-
-st.set_page_config(page_title="Addverb Resume Shortlister", page_icon="https://addverb.com/wp-content/uploads/2023/12/cropped-MicrosoftTeams-image-7.png", layout="centered")
-
 genai.configure(api_key="AIzaSyBrRVRj1I1lDwCRcMz9svDqAqa9TMo9Aw0")
 
 generation_config = {
