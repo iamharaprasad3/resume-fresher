@@ -26,8 +26,8 @@ keywords = []
 list_of_score = {}
 jd_done = False
 current_date = datetime.now()
-btech = ['B Tech', 'BTech', 'B Tech', 'B.Tech', 'B. Tech', 'Bachelor of Technology', 'Bachelors of Technology', 'BE', 'B.E', 'Bachelor of Engineering', 'Bachelors of Engineering', "Bachelor's degree", ]
-mba = ['MBA', 'M.B.A', 'Masters in Business Administration']
+btech = ['B Tech','btech','b tech', 'B tech' ,'BTech', 'B Tech', 'B.Tech', 'B. Tech', 'Bachelor of Technology', 'Bachelors of Technology', 'BE', 'B.E', 'Bachelor of Engineering', 'Bachelors of Engineering', "Bachelor's degree", ]
+mba = ['MBA', 'M.B.A', 'Masters in Business Administration', 'mba']
 diploma = ['diploma', 'Diploma']
 degrees = [btech, mba, diploma]
 check_degrees = []
@@ -390,8 +390,10 @@ def runningmain(text_content, file_name):
             if(total_experience/12 < int(minimum_exp)):
                 print("Minimum Experience Criteria Doesn't match")
                 st.write("***:red[MINIMUM EXPERIENCE CRITERIA DOESN'T MATCH]***")
-                # total_score = -100
                 dicc.update({"Experience":"MINIMUM EXPERIENCE CRITERIA DOESN'T MATCH"})
+            elif(total_experience/12 > maximum_exp):
+                dicc.update({"Experience":"EXPERIENCE MORE THAN MAXIMUM EXPERIENCE REQUIRED"})
+                st.write("***:red[EXPERIENCE MORE THAN MAXIMUM EXPERIENCE REQUIRED]***")
             else:
                 dicc.update({"Experience":"PASS"})
 
@@ -416,18 +418,29 @@ def runningmain(text_content, file_name):
         dicc.update({"Minimum Score Pass":"PASS"})
     else:
         st.write(f"Candidate has below par scores or no score found")
-        dicc.update({"Minimum Score Pass":"FAIl"})
+        dicc.update({"Minimum Score Pass":"Scores not found or are below par scores"})
 
-    
-    st.write(f":red[Score after results extraction] - **({str(total_score)}/50)**")
-    if(min_quali != ""):
-        for degree in check_degrees:
-            for word in degree:
-                if word in text_content:
-                    total_score += 5
-                    break
+    if(min_quali != "" and minimum_exp != ""):
+        st.write(f":red[Score after results extraction] - **({str(total_score)}/50)**")
+    else:
+        st.write(f":red[Score after results extraction] - **({str(total_score)}/30)**")
 
-        st.write(f":red[Score after min. qualification check] - **({str(total_score)}/50)**")
+    deg_flag = True
+    for degree in check_degrees:
+        for word in degree:
+            if word in text_content:
+                deg_flag = False
+                break
+
+    if(deg_flag):
+       total_score += 3
+       dicc.update({"Min. Qual":"Qualification Matched"})
+    else:
+        total_score += 5
+        dicc.update({"Min. Qual":"Qualification Doesn't Match"})
+
+
+    st.write(f":red[Score after min. qualification check] - **({str(total_score)}/50)**")
 
     # keywords
     total_words = 0
@@ -453,7 +466,11 @@ def runningmain(text_content, file_name):
     else:
         total_score = total_score + 3
 
-    st.write(f":red[Score after keyword matching] - **({str(total_score)}/50)**")
+    if(min_quali != "" and minimum_exp != ""):
+        st.write(f":red[Score after keyword matching] - **({str(total_score)}/50)**")
+    else:
+        st.write(f":red[Score after keyword matching] - **({str(total_score)}/30)**")
+
     dicc.update({"Keyword Match Percentage":f"{(words_in_pdf/total_words)*100}"})
 
 
@@ -464,15 +481,28 @@ def runningmain(text_content, file_name):
 
     print("Total Score - " + str(total_score))
     st.write(f"Similarity between Job Responsibilities from JD and candidate's resume out of 10 - ({str(similarity_score)}/10)")
-    st.write(f"**:red[Total Score of the Candidate]** - **({str(total_score)}/50)**")
+    
+    if(min_quali != "" and minimum_exp != ""):
+        st.write(f"**:red[Total Score of the Candidate]** - **({str(total_score)}/50)**")
+    else:
+        st.write(f"**:red[Total Score of the Candidate]** - **({str(total_score)}/30)**")
+
     dicc.update({"Similarity Score":f"{str(similarity_score)}"})
 
-    if(total_score > 30):
-        st.write(f"***:red[SHORTLISTED]***")
-        dicc.update({"RESULT":"SHORTLISTED"})
-        # os.replace(file_path, folder_path + "/shortlisted/" + file_name)
+    if(min_quali != "" and minimum_exp != ""):
+        if(total_score > 30):
+            st.write(f"***:red[SHORTLISTED]***")
+            dicc.update({"RESULT":"SHORTLISTED"})
+            # os.replace(file_path, folder_path + "/shortlisted/" + file_name)
+        else:
+            dicc.update({"RESULT":"FAILED"})
     else:
-        dicc.update({"RESULT":"FAILED"})
+        if(total_score > 10):
+            st.write(f"***:red[SHORTLISTED]***")
+            dicc.update({"RESULT":"SHORTLISTED"})
+            # os.replace(file_path, folder_path + "/shortlisted/" + file_name)
+        else:
+            dicc.update({"RESULT":"FAILED"})
         
     dicc.update({"TOTAL SCORE":f"{total_score}"}) 
 
@@ -483,6 +513,7 @@ def runningmain(text_content, file_name):
 
 st.set_page_config(page_title="Addverb Resume Shortlister - With JD", page_icon="https://addverb.com/wp-content/uploads/2023/12/cropped-MicrosoftTeams-image-7.png", layout="centered")
 minimum_exp = st.text_input("Please Enter Minimum Experienced Required for the Role")
+maximum_exp = st.text_input("Please Enter Maximum Experienced Required for the Role")
 min_quali = st.text_input("Please enter the minimum qualification")
 for degree in degrees:
     for word in degree:
@@ -543,7 +574,7 @@ for file_name, attributes in sorted_scores:
     data.append(row)
 
 if(min_quali != "" and minimum_exp != ""):
-    df = pd.DataFrame(data, columns=["File Name", "Job Switch", "Experience", "Career Breaks", "Minimum Score Pass", "Keyword Matching Percentage", "Similarity Score", "Result", "Total Score"])
+    df = pd.DataFrame(data, columns=["File Name", "Job Switch", "Experience", "Career Breaks", "Minimum Score Pass", "Min. Qual", "Keyword Matching Percentage", "Similarity Score", "Result", "Total Score"])
 else:
     df = pd.DataFrame(data, columns=["File Name", "Minimum Score Pass", "Keyword Matching Percentage", "Similarity Score", "Result", "Total Score"])
 
