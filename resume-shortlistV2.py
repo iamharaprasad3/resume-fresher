@@ -391,7 +391,7 @@ def runningmain(text_content, file_name):
                 print("Minimum Experience Criteria Doesn't match")
                 st.write("***:red[MINIMUM EXPERIENCE CRITERIA DOESN'T MATCH]***")
                 dicc.update({"Experience":"MINIMUM EXPERIENCE CRITERIA DOESN'T MATCH"})
-            elif(total_experience/12 > maximum_exp):
+            elif(total_experience/12 > int(maximum_exp)):
                 dicc.update({"Experience":"EXPERIENCE MORE THAN MAXIMUM EXPERIENCE REQUIRED"})
                 st.write("***:red[EXPERIENCE MORE THAN MAXIMUM EXPERIENCE REQUIRED]***")
             else:
